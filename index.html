@@ -1,93 +1,706 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<title>Установка приложений</title>
-<style>
-:root{--bg:#0b0b0f;--card:#17171d;--text:#f6f6f7;--muted:#a2a2ac;--line:rgba(255,255,255,.09);--accent:#5b8cff}
-*{box-sizing:border-box}
-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 10% 0,rgba(91,140,255,.22),transparent 35%),var(--bg);color:var(--text);min-height:100vh}
-.wrap{max-width:760px;margin:auto;padding:30px 18px 56px}
-h1{font-size:38px;letter-spacing:-.03em;margin:10px 0 8px}
-.sub{color:var(--muted);line-height:1.5;margin:0 0 18px}
-.notice{padding:14px 15px;border-radius:16px;border:1px solid rgba(91,140,255,.28);background:rgba(91,140,255,.09);font-size:14px;line-height:1.45;margin-bottom:18px}
-.grid{display:grid;grid-template-columns:1fr;gap:14px}
-.card{background:linear-gradient(180deg,#1b1b22,#141419);border:1px solid var(--line);border-radius:22px;padding:17px;box-shadow:0 15px 45px rgba(0,0,0,.25)}
-.row{display:flex;align-items:center;gap:14px}
-.icon{width:62px;height:62px;border-radius:16px;background:#24242d;border:1px solid var(--line);display:grid;place-items:center;font-weight:800}
-.meta{flex:1}.name{font-size:19px;font-weight:750}.ver{font-size:13px;color:var(--muted);margin-top:4px}
-.actions{display:grid;grid-template-columns:1fr auto;gap:9px;margin-top:15px}
-.btn,.copy{border:0;border-radius:14px;padding:14px 16px;font-size:16px;font-weight:700;text-decoration:none;text-align:center}
-.btn{background:var(--accent);color:#fff}.copy{background:rgba(255,255,255,.07);color:#eee;border:1px solid var(--line)}
-.guide{margin-top:20px;background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:22px;padding:18px}
-.guide h2{margin:0 0 10px}.step{padding:10px 0;border-top:1px solid var(--line);font-size:14px;line-height:1.45;color:#d7d7df}.step:first-of-type{border-top:0}
-.foot{color:#777783;font-size:12px;line-height:1.45;margin-top:18px}
-@media(min-width:700px){.grid{grid-template-columns:1fr 1fr}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#07111f">
+  <meta name="description" content="OSi Store — личный каталог приложений для iPhone.">
+  <title>OSi Store</title>
+  <style>
+    :root{
+      --bg:#050b14;
+      --bg-2:#091325;
+      --panel:rgba(17,27,47,.84);
+      --panel-2:rgba(12,20,37,.92);
+      --line:rgba(255,255,255,.08);
+      --line-2:rgba(130,165,255,.24);
+      --text:#f5f8ff;
+      --muted:#9fb0cb;
+      --muted-2:#7f90ab;
+      --primary:#6b96ff;
+      --primary-2:#8ab3ff;
+      --success:#6ce6b4;
+      --warning:#ffd36b;
+      --shadow:0 22px 60px rgba(0,0,0,.40);
+      --radius-xl:32px;
+      --radius-lg:24px;
+      --radius-md:18px;
+      --max:1120px;
+    }
+
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Inter,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(82,118,255,.24) 0, transparent 28%),
+        radial-gradient(circle at 100% 0%, rgba(95,143,255,.16) 0, transparent 22%),
+        radial-gradient(circle at 50% 100%, rgba(39,87,191,.20) 0, transparent 30%),
+        linear-gradient(180deg, #081222 0%, var(--bg) 58%, #040811 100%);
+      min-height:100vh;
+    }
+
+    a{color:inherit;text-decoration:none}
+    img{display:block;max-width:100%}
+    .container{width:min(calc(100% - 28px), var(--max)); margin:0 auto}
+
+    .topbar{
+      position:sticky; top:0; z-index:30;
+      backdrop-filter:blur(18px);
+      background:rgba(7,11,20,.56);
+      border-bottom:1px solid rgba(255,255,255,.05);
+    }
+    .topbar-inner{
+      display:flex;align-items:center;justify-content:space-between;gap:18px;
+      padding:14px 0;
+    }
+    .brand{display:flex;align-items:center;gap:14px;min-width:0}
+    .brand-logo{
+      width:42px;height:42px;border-radius:14px;overflow:hidden;flex:none;
+      background:#fff;border:1px solid rgba(255,255,255,.14);box-shadow:var(--shadow);
+    }
+    .brand-title{font-weight:800;font-size:19px;letter-spacing:-.03em}
+    .brand-sub{color:var(--muted-2);font-size:12px;margin-top:2px}
+    .nav{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .nav a{
+      padding:10px 14px;border-radius:999px;font-size:14px;color:#dce6ff;
+      background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.05);
+    }
+
+    .hero{padding:42px 0 24px}
+    .hero-grid{
+      display:grid;gap:20px;align-items:stretch;
+      grid-template-columns:1.2fr .8fr;
+    }
+
+    .hero-main,.hero-side,.notice,.apps-wrap,.steps-wrap,.faq-wrap,.footer-card{
+      background:linear-gradient(180deg, rgba(18,28,49,.88), rgba(10,17,31,.94));
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(20px);
+    }
+
+    .hero-main{
+      border-radius:var(--radius-xl);
+      padding:34px;
+      position:relative;
+      overflow:hidden;
+    }
+    .hero-main::before{
+      content:"";
+      position:absolute; inset:auto -15% -25% auto; width:320px; height:320px; border-radius:50%;
+      background:radial-gradient(circle, rgba(109,151,255,.24), transparent 60%);
+      pointer-events:none;
+    }
+    .eyebrow{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:9px 12px;border-radius:999px;font-size:13px;color:#dce7ff;
+      background:rgba(104,145,255,.12);border:1px solid rgba(123,163,255,.18);
+      margin-bottom:18px;
+    }
+    .hero-title{
+      font-size:clamp(40px, 5vw, 70px);
+      line-height:.98;
+      letter-spacing:-.055em;
+      font-weight:900;
+      margin:0;
+      max-width:760px;
+    }
+    .hero-title .hero-brand{display:block;color:#fff;font-size:1em}.hero-title .hero-tagline{display:block;color:#cfe0ff;font-size:.62em;line-height:1.08;margin-top:10px;letter-spacing:-.035em;font-weight:780}
+    .hero-text{
+      margin:18px 0 0;color:var(--muted);font-size:18px;line-height:1.55;max-width:720px;
+    }
+    .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+
+    .btn{
+      appearance:none;border:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;
+      min-height:52px;padding:0 20px;border-radius:16px;font-size:16px;font-weight:800;letter-spacing:-.02em;
+      transition:transform .18s ease,box-shadow .18s ease,background .18s ease;
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn-primary{
+      color:#fff;
+      background:linear-gradient(180deg,var(--primary-2),var(--primary));
+      box-shadow:0 14px 34px rgba(96,138,255,.34)
+    }
+    .btn-secondary{
+      color:#eef4ff;
+      background:rgba(255,255,255,.05);
+      border:1px solid var(--line)
+    }
+
+    .hero-side{
+      border-radius:var(--radius-xl);
+      padding:22px;
+      display:flex;flex-direction:column;gap:14px;
+    }
+    .hero-logo{
+      border-radius:26px;overflow:hidden;background:#fff;border:1px solid rgba(255,255,255,.14);
+      min-height:220px;display:grid;place-items:center;
+    }
+    .hero-side h3{margin:4px 0 0;font-size:22px;letter-spacing:-.03em}
+    .hero-side p{margin:0;color:var(--muted);line-height:1.55;font-size:15px}
+    .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+    .chip{
+      padding:8px 10px;font-size:12px;color:#dfe8ff;border-radius:999px;
+      background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)
+    }
+
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}
+    .stat{
+      padding:18px;border-radius:22px;background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+    }
+    .stat-value{font-size:28px;font-weight:900;letter-spacing:-.04em}
+    .stat-label{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.35}
+
+    .notice{
+      border-radius:26px;padding:18px 20px;margin:20px 0 24px;
+      display:flex;gap:14px;align-items:flex-start;
+    }
+    .notice-icon{
+      width:42px;height:42px;flex:none;border-radius:14px;display:grid;place-items:center;
+      background:rgba(108,230,180,.12);border:1px solid rgba(108,230,180,.2);
+      color:var(--success);font-size:20px;
+    }
+    .notice h4{margin:0 0 6px;font-size:18px;letter-spacing:-.02em}
+    .notice p{margin:0;color:var(--muted);line-height:1.55}
+    .prelaunch-guide{margin-top:16px}
+    .prelaunch-guide details{
+      border-radius:20px;overflow:hidden;background:rgba(255,255,255,.035);
+      border:1px solid rgba(255,255,255,.07)
+    }
+    .prelaunch-guide summary{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      list-style:none;cursor:pointer;padding:15px 16px;font-weight:800;color:#eef4ff
+    }
+    .prelaunch-guide summary::-webkit-details-marker{display:none}
+    .prelaunch-guide summary::after{content:'+';font-size:24px;color:#b9c8e4;line-height:1}
+    .prelaunch-guide details[open] summary::after{content:'−'}
+    .guide-intro{padding:0 16px 16px;color:var(--muted);line-height:1.55;font-size:14px}
+    .guide-grid{
+      display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:0 16px 16px
+    }
+    .guide-card{
+      border-radius:18px;overflow:hidden;background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06)
+    }
+    .guide-card img{width:100%;height:auto;display:block;background:#000}
+    .guide-card figcaption{padding:12px 13px 14px;color:#dce6ff;font-size:13px;line-height:1.45}
+    .guide-card figcaption strong{display:block;color:#fff;font-size:14px;margin-bottom:3px}
+    .return-note{
+      margin-top:14px;padding:14px 15px;border-radius:18px;
+      background:rgba(107,150,255,.08);border:1px solid rgba(107,150,255,.16);
+      color:#dce7ff;line-height:1.5;font-size:14px
+    }
+
+    .section-head{
+      display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:14px
+    }
+    .section-head h2{margin:0;font-size:34px;letter-spacing:-.045em}
+    .section-head p{margin:0;color:var(--muted);font-size:15px;line-height:1.45}
+
+    .apps-wrap{border-radius:var(--radius-xl);padding:22px}
+    .searchbar{
+      display:flex;align-items:center;gap:12px;padding:14px 16px;margin-bottom:18px;
+      border-radius:18px;background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06)
+    }
+    .searchbar input{
+      width:100%;border:0;outline:0;background:transparent;color:var(--text);font-size:16px
+    }
+    .searchbar .icon{color:var(--muted)}
+
+    .apps-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .app-card{
+      border-radius:28px;padding:20px;position:relative;overflow:hidden;
+      background:linear-gradient(180deg, rgba(20,31,54,.96), rgba(11,18,33,.96));
+      border:1px solid rgba(255,255,255,.07);
+      box-shadow:var(--shadow);
+      transition:transform .2s ease,border-color .2s ease;
+    }
+    .app-card:hover{
+      transform:translateY(-2px);
+      border-color:rgba(130,165,255,.18);
+    }
+    .app-card::before{
+      content:"";position:absolute;inset:auto -20% 65% auto;width:220px;height:220px;border-radius:50%;
+      background:radial-gradient(circle, rgba(107,150,255,.20), transparent 60%);
+      pointer-events:none;
+    }
+    .app-head{display:grid;grid-template-columns:86px 1fr;gap:16px;align-items:center}
+    .app-icon{
+      width:86px;height:86px;border-radius:24px;overflow:hidden;
+      border:1px solid rgba(255,255,255,.1);
+      background:linear-gradient(135deg,#243a67,#101828);
+      display:grid;place-items:center;box-shadow:0 16px 26px rgba(0,0,0,.3)
+    }
+    .app-icon .fallback{font-weight:900;font-size:30px;letter-spacing:-.05em;color:#fff}
+    .app-name{font-size:32px;font-weight:900;letter-spacing:-.05em;line-height:1}
+    .app-version{color:#dbe6ff;font-size:15px;margin-top:8px}
+    .app-desc{margin-top:14px;color:var(--muted);font-size:15px;line-height:1.52;min-height:72px}
+
+    .meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+    .meta-pill{
+      padding:8px 10px;border-radius:999px;font-size:12px;
+      background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#dce6ff
+    }
+    .meta-pill.highlight{
+      background:rgba(255,211,107,.08);
+      border-color:rgba(255,211,107,.18);
+      color:#ffe29a
+    }
+
+    .app-actions{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:18px}
+    .app-note{margin-top:12px;color:#b8c7e2;font-size:13px;line-height:1.5}
+
+    .steps-faq{display:grid;grid-template-columns:1.02fr .98fr;gap:18px;margin-top:20px}
+    .steps-wrap,.faq-wrap{border-radius:var(--radius-xl);padding:22px}
+    .steps-wrap h2,.faq-wrap h2{margin:0 0 14px;font-size:32px;letter-spacing:-.04em}
+
+    .steps{display:grid;gap:14px}
+    .step{
+      display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start;
+      padding:14px;border-radius:20px;background:rgba(255,255,255,.035);
+      border:1px solid rgba(255,255,255,.06)
+    }
+    .step-num{
+      width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-weight:900;
+      background:rgba(107,150,255,.13);border:1px solid rgba(107,150,255,.22)
+    }
+    .step h3{margin:2px 0 6px;font-size:18px}
+    .step p{margin:0;color:var(--muted);line-height:1.5;font-size:15px}
+
+    .faq{display:grid;gap:12px}
+    details{
+      border-radius:18px;overflow:hidden;background:rgba(255,255,255,.035);
+      border:1px solid rgba(255,255,255,.06)
+    }
+    summary{
+      list-style:none;cursor:pointer;padding:16px 18px;font-weight:700;
+      position:relative;padding-right:44px;
+    }
+    summary::-webkit-details-marker{display:none}
+    summary::after{
+      content:'+';position:absolute;right:18px;top:50%;transform:translateY(-50%);
+      color:var(--muted);font-size:22px;
+    }
+    details[open] summary::after{content:'−'}
+    .faq-content{padding:0 18px 18px;color:var(--muted);line-height:1.55;font-size:15px}
+
+    .footer-card{
+      border-radius:28px;padding:20px 22px;margin:20px 0 40px;
+      display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap
+    }
+    .footer-card strong{font-size:18px;letter-spacing:-.02em}
+    .footer-card p{margin:6px 0 0;color:var(--muted);font-size:14px;line-height:1.5}
+    .footer-badge{
+      display:inline-flex;align-items:center;gap:10px;padding:12px 14px;border-radius:16px;
+      background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);
+      color:#deebff;font-size:14px;white-space:nowrap
+    }
+
+    .empty{
+      display:none;margin-top:6px;padding:26px;text-align:center;border-radius:22px;color:var(--muted);
+      border:1px dashed rgba(255,255,255,.12);background:rgba(255,255,255,.025)
+    }
+
+    @media (prefers-reduced-motion:no-preference){
+      .fade-up{animation:fadeUp .55s ease both}
+      .fade-up.delay-1{animation-delay:.06s}
+      .fade-up.delay-2{animation-delay:.12s}
+      @keyframes fadeUp{
+        from{opacity:0;transform:translateY(12px)}
+        to{opacity:1;transform:translateY(0)}
+      }
+    }
+
+    @media (max-width:960px){
+      .hero-grid,.steps-faq,.apps-grid{grid-template-columns:1fr}
+      .stats{grid-template-columns:repeat(2,1fr)}
+    }
+
+    @media (max-width:680px){
+      .container{width:min(calc(100% - 20px), var(--max))}
+      .topbar-inner{align-items:flex-start;flex-direction:column}
+      .nav{width:100%;justify-content:flex-start}
+      .hero{padding-top:22px}
+      .hero-main,.hero-side,.apps-wrap,.steps-wrap,.faq-wrap{padding:18px}
+      .hero-title{font-size:42px}
+      .section-head{align-items:flex-start;flex-direction:column}
+      .section-head h2,.steps-wrap h2,.faq-wrap h2{font-size:28px}
+      .app-name{font-size:28px}
+      .app-head{grid-template-columns:76px 1fr}
+      .app-icon{width:76px;height:76px}
+      .stats{grid-template-columns:1fr 1fr;gap:10px}
+      .stat{padding:16px}
+      .notice{padding:16px}
+      .guide-grid{grid-template-columns:1fr;padding-left:0;padding-right:0}
+      .guide-intro{padding-left:0;padding-right:0}
+      .prelaunch-guide summary{padding-left:0;padding-right:0}
+      .prelaunch-guide details{border:0;background:transparent}
+      .app-actions{grid-template-columns:1fr}
+      .footer-card{padding:18px}
+    }
+  </style>
 </head>
 <body>
-<main class="wrap">
-<h1>Мои приложения</h1>
-<p class="sub">Установка приложений на iPhone через системный механизм iOS.</p>
-<div class="notice">
-Если приложение было получено через определённый Apple ID, перед первым запуском войдите в него только через
-<b>Настройки → Apple Account → Контент и покупки</b>.
-</div>
-<section class="grid" id="apps"></section>
-<section class="guide">
-<h2>Как установить</h2>
-<div class="step">1. Откройте страницу в Safari.</div>
-<div class="step">2. Нажмите «Установить».</div>
-<div class="step">3. Подтвердите системное окно iOS.</div>
-<div class="step">4. После установки откройте приложение хотя бы один раз.</div>
-</section>
-<div class="foot">Страница только открывает <code>itms-services://</code> с вашим manifest.</div>
-</main>
-<script>
-const apps = [
-  {
-    name:"PREMIER",
-    version:"2.34.0",
-    initials:"PR",
-    manifest:"https://storage.yandexcloud.net/sbol1234/premier.plist"
-  },
-  {
-    name:"MAX",
-    version:"26.17.3",
-    initials:"MAX",
-    manifest:"https://storage.yandexcloud.net/sbol1234/max.plist"
-  }
-];
-
-function installUrl(url){
-  return "itms-services://?action=download-manifest&url=" + encodeURIComponent(url);
-}
-
-const root = document.getElementById("apps");
-for (const app of apps){
-  const url = installUrl(app.manifest);
-  const el = document.createElement("article");
-  el.className = "card";
-  el.innerHTML = `
-    <div class="row">
-      <div class="icon">${app.initials}</div>
-      <div class="meta">
-        <div class="name">${app.name}</div>
-        <div class="ver">Версия ${app.version}</div>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <div class="brand-logo"><img src="logo.png" alt="OSi Store"></div>
+        <div>
+          <div class="brand-title">OSi Store</div>
+          <div class="brand-sub">Каталог приложений для iPhone</div>
+        </div>
       </div>
+      <nav class="nav">
+        <a href="#apps">Приложения</a>
+        <a href="#install">Как установить</a>
+        <a href="#faq">FAQ</a>
+      </nav>
     </div>
-    <div class="actions">
-      <a class="btn" href="${url}">Установить</a>
-      <button class="copy" type="button">Ссылка</button>
-    </div>`;
-  el.querySelector(".copy").onclick = async () => {
-    try { await navigator.clipboard.writeText(url); alert("Ссылка скопирована"); }
-    catch(e) { prompt("Скопируйте ссылку:", url); }
-  };
-  root.appendChild(el);
-}
-</script>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="hero-main fade-up">
+          <div class="eyebrow">● Личный каталог приложений · iPhone</div>
+          <h1 class="hero-title"><span class="hero-brand">OSi Store</span><span class="hero-tagline">Всё нужное в одном месте</span></h1>
+          <p class="hero-text">
+            Каталог приложений для iPhone с быстрым доступом к установке,
+            понятными карточками, версиями и инструкциями.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#apps">Открыть каталог</a>
+            <a class="btn btn-secondary" href="#install">Как установить</a>
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="stat-value">2</div>
+              <div class="stat-label">приложения в каталоге</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">HTTPS</div>
+              <div class="stat-label">защищённая страница и ссылки</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">Safari</div>
+              <div class="stat-label">оптимизировано для iPhone</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">1 tap</div>
+              <div class="stat-label">переход к установке</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="hero-side fade-up delay-1">
+          <div class="hero-logo"><img src="logo.png" alt="OSi Store logo"></div>
+          <h3>OSi Store</h3>
+          <p>
+            Лаконичный каталог приложений с единым оформлением,
+            поиском и понятной навигацией.
+          </p>
+          <div class="chips">
+            <span class="chip">Тёмная тема</span>
+            <span class="chip">Адаптация под iPhone</span>
+            <span class="chip">Поиск</span>
+            <span class="chip">GitHub Pages</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="notice fade-up delay-2">
+      <div class="notice-icon">✓</div>
+      <div>
+        <h4>Перед первым запуском</h4>
+        <p>
+          Если приложение связано с конкретным Apple ID, сначала войдите в него только через
+          <b>Настройки → Apple Account → Контент и покупки</b>.
+          После первого успешного запуска приложения выйдите из временного Apple ID и снова войдите под своим Apple ID.
+        </p>
+
+        <div class="prelaunch-guide">
+          <details>
+            <summary>Показать пошаговую инструкцию со скриншотами</summary>
+            <div class="guide-intro">
+              На скриншотах персональные данные скрыты. Используйте этот способ только для раздела
+              <b>«Контент и покупки»</b> — основной аккаунт iCloud менять не нужно.
+            </div>
+            <div class="guide-grid">
+              <figure class="guide-card">
+                <img src="guide-step-1.png" alt="Шаг 1 — открыть Apple Account" loading="lazy">
+                <figcaption><strong>Шаг 1</strong>Откройте Apple Account в «Настройках».</figcaption>
+              </figure>
+              <figure class="guide-card">
+                <img src="guide-step-2.png" alt="Шаг 2 — открыть Контент и покупки" loading="lazy">
+                <figcaption><strong>Шаг 2</strong>Нажмите «Контент и покупки».</figcaption>
+              </figure>
+              <figure class="guide-card">
+                <img src="guide-step-3.png" alt="Шаг 3 — выйти из текущего аккаунта Контент и покупки" loading="lazy">
+                <figcaption><strong>Шаг 3</strong>Выберите «Выйти» для текущего аккаунта «Контент и покупки».</figcaption>
+              </figure>
+              <figure class="guide-card">
+                <img src="guide-step-4.png" alt="Шаг 4 — подтвердить выход" loading="lazy">
+                <figcaption><strong>Шаг 4</strong>Подтвердите выход.</figcaption>
+              </figure>
+              <figure class="guide-card">
+                <img src="guide-step-5.png" alt="Шаг 5 — настроить Контент и покупки" loading="lazy">
+                <figcaption><strong>Шаг 5</strong>Нажмите «Настроить» рядом с «Контент и покупки».</figcaption>
+              </figure>
+              <figure class="guide-card">
+                <img src="guide-step-6.png" alt="Шаг 6 — выбрать другой Apple ID" loading="lazy">
+                <figcaption><strong>Шаг 6</strong>Если требуется другой Apple ID, выберите соответствующую кнопку.</figcaption>
+              </figure>
+              <figure class="guide-card">
+                <img src="guide-step-7.png" alt="Шаг 7 — ввести Apple ID" loading="lazy">
+                <figcaption><strong>Шаг 7</strong>Введите Apple ID, с которым связано приложение, и завершите вход.</figcaption>
+              </figure>
+            </div>
+            <div class="return-note">
+              <b>После первого запуска:</b> вернитесь в <b>Настройки → Apple Account → Контент и покупки</b>,
+              выйдите из временного Apple ID и войдите обратно под своим Apple ID.
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="apps-wrap" id="apps">
+      <div class="section-head">
+        <div>
+          <h2>Каталог приложений</h2>
+          <p>Название, версия и быстрый переход к установке.</p>
+        </div>
+        <p id="countLabel">2 приложения</p>
+      </div>
+
+      <label class="searchbar" aria-label="Поиск по приложениям">
+        <span class="icon">🔎</span>
+        <input
+          type="search"
+          id="searchInput"
+          placeholder="Найти приложение по названию, версии или категории…"
+        >
+      </label>
+
+      <div class="apps-grid" id="appsGrid"></div>
+      <div class="empty" id="emptyState">
+        Ничего не найдено. Измени запрос и попробуй ещё раз.
+      </div>
+    </section>
+
+    <section class="steps-faq">
+      <div class="steps-wrap" id="install">
+        <h2>Как установить</h2>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div>
+              <h3>Открой страницу в Safari</h3>
+              <p>Лучше всего запускать установку именно из Safari на iPhone.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">2</div>
+            <div>
+              <h3>Нажми «Установить»</h3>
+              <p>Сайт откроет системную ссылку установки для выбранного приложения.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">3</div>
+            <div>
+              <h3>Подтверди действие</h3>
+              <p>После системного запроса iOS подтверди установку приложения.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">4</div>
+            <div>
+              <h3>Открой приложение</h3>
+              <p>После установки запусти приложение хотя бы один раз.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-wrap" id="faq">
+        <h2>FAQ</h2>
+        <div class="faq">
+          <details>
+            <summary>Почему установка иногда не стартует сразу?</summary>
+            <div class="faq-content">
+              Чаще всего помогает открыть страницу именно в Safari и повторить нажатие.
+            </div>
+          </details>
+
+          <details>
+            <summary>Зачем кнопка «Ссылка»?</summary>
+            <div class="faq-content">
+              Она копирует прямой install-url для выбранного приложения.
+            </div>
+          </details>
+
+          <details>
+            <summary>Нужно ли входить в Apple ID?</summary>
+            <div class="faq-content">
+              Если конкретное приложение связано с определённым Apple ID, войдите в него только в разделе «Контент и покупки» перед первым запуском приложения. В основной iCloud-аккаунт заходить не нужно.
+            </div>
+          </details>
+
+          <details>
+            <summary>Что делать после установки?</summary>
+            <div class="faq-content">
+              Откройте приложение хотя бы один раз и убедитесь, что оно запускается. После этого выйдите из временного Apple ID в разделе «Контент и покупки» и войдите обратно под своим Apple ID.
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="footer-card">
+      <div>
+        <strong>OSi Store</strong>
+        <p>
+          Каталог приложений для iPhone. Позже можно добавить новые приложения,
+          реальные иконки и отдельные разделы.
+        </p>
+      </div>
+      <div class="footer-badge">index.html + logo.png</div>
+    </section>
+  </main>
+
+  <script>
+    const APPS = [
+      {
+        name: 'PREMIER',
+        version: '2.34.0',
+        category: 'Видео',
+        subtitle: 'Онлайн-кинотеатр и медиасервис.',
+        status: 'Готово к установке',
+        device: 'iPhone',
+        initials: 'PR',
+        accent: '#C59AFF',
+        manifest: 'https://storage.yandexcloud.net/sbol1234/premier.plist'
+      },
+      {
+        name: 'MAX',
+        version: '26.17.3',
+        category: 'Связь',
+        subtitle: 'Приложение MAX для общения и сервисов.',
+        status: 'Готово к установке',
+        device: 'iPhone',
+        initials: 'MX',
+        accent: '#7EE3FF',
+        manifest: 'https://storage.yandexcloud.net/sbol1234/max.plist'
+      }
+    ];
+
+    const grid = document.getElementById('appsGrid');
+    const input = document.getElementById('searchInput');
+    const countLabel = document.getElementById('countLabel');
+    const emptyState = document.getElementById('emptyState');
+
+    function installUrl(manifest){
+      return 'itms-services://?action=download-manifest&url=' + encodeURIComponent(manifest);
+    }
+
+    function copyText(text){
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text)
+          .then(() => alert('Ссылка скопирована'))
+          .catch(() => prompt('Скопируйте ссылку вручную:', text));
+      } else {
+        prompt('Скопируйте ссылку вручную:', text);
+      }
+    }
+
+    function pluralizeApps(n){
+      const mod10 = n % 10;
+      const mod100 = n % 100;
+      if(mod10 === 1 && mod100 !== 11) return 'приложение';
+      if(mod10 >= 2 && mod10 <= 4 && !(mod100 >= 12 && mod100 <= 14)) return 'приложения';
+      return 'приложений';
+    }
+
+    function render(query=''){
+      const q = query.trim().toLowerCase();
+
+      const items = APPS.filter(app => {
+        const hay = [
+          app.name,
+          app.version,
+          app.category,
+          app.subtitle,
+          app.status
+        ].join(' ').toLowerCase();
+
+        return !q || hay.includes(q);
+      });
+
+      countLabel.textContent = `${items.length} ${pluralizeApps(items.length)}`;
+      grid.innerHTML = '';
+      emptyState.style.display = items.length ? 'none' : 'block';
+
+      items.forEach(app => {
+        const url = installUrl(app.manifest);
+        const card = document.createElement('article');
+        card.className = 'app-card';
+
+        card.innerHTML = `
+          <div class="app-head">
+            <div
+              class="app-icon"
+              style="
+                background:
+                  linear-gradient(135deg, ${app.accent}33, #121b2d 70%),
+                  linear-gradient(135deg,#263a66,#101828)
+              "
+            >
+              <div class="fallback">${app.initials}</div>
+            </div>
+
+            <div>
+              <div class="app-name">${app.name}</div>
+              <div class="app-version">Версия ${app.version}</div>
+            </div>
+          </div>
+
+          <div class="app-desc">${app.subtitle}</div>
+
+          <div class="meta-row">
+            <span class="meta-pill">${app.category}</span>
+            <span class="meta-pill">${app.device}</span>
+            <span class="meta-pill highlight">${app.status}</span>
+          </div>
+
+          <div class="app-actions">
+            <a class="btn btn-primary" href="${url}">Установить</a>
+            <button type="button" class="btn btn-secondary js-copy">Ссылка</button>
+          </div>
+
+          <div class="app-note">
+            Если установка не началась сразу, открой страницу в Safari и повтори попытку.
+          </div>
+        `;
+
+        card.querySelector('.js-copy').addEventListener('click', () => copyText(url));
+        grid.appendChild(card);
+      });
+    }
+
+    input.addEventListener('input', e => render(e.target.value));
+    render();
+  </script>
 </body>
 </html>
