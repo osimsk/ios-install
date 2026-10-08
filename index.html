@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Установка приложений</title>
+<style>
+:root{--bg:#0b0b0f;--card:#17171d;--text:#f6f6f7;--muted:#a2a2ac;--line:rgba(255,255,255,.09);--accent:#5b8cff}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 10% 0,rgba(91,140,255,.22),transparent 35%),var(--bg);color:var(--text);min-height:100vh}
+.wrap{max-width:760px;margin:auto;padding:30px 18px 56px}
+h1{font-size:38px;letter-spacing:-.03em;margin:10px 0 8px}
+.sub{color:var(--muted);line-height:1.5;margin:0 0 18px}
+.notice{padding:14px 15px;border-radius:16px;border:1px solid rgba(91,140,255,.28);background:rgba(91,140,255,.09);font-size:14px;line-height:1.45;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:1fr;gap:14px}
+.card{background:linear-gradient(180deg,#1b1b22,#141419);border:1px solid var(--line);border-radius:22px;padding:17px;box-shadow:0 15px 45px rgba(0,0,0,.25)}
+.row{display:flex;align-items:center;gap:14px}
+.icon{width:62px;height:62px;border-radius:16px;background:#24242d;border:1px solid var(--line);display:grid;place-items:center;font-weight:800}
+.meta{flex:1}.name{font-size:19px;font-weight:750}.ver{font-size:13px;color:var(--muted);margin-top:4px}
+.actions{display:grid;grid-template-columns:1fr auto;gap:9px;margin-top:15px}
+.btn,.copy{border:0;border-radius:14px;padding:14px 16px;font-size:16px;font-weight:700;text-decoration:none;text-align:center}
+.btn{background:var(--accent);color:#fff}.copy{background:rgba(255,255,255,.07);color:#eee;border:1px solid var(--line)}
+.guide{margin-top:20px;background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:22px;padding:18px}
+.guide h2{margin:0 0 10px}.step{padding:10px 0;border-top:1px solid var(--line);font-size:14px;line-height:1.45;color:#d7d7df}.step:first-of-type{border-top:0}
+.foot{color:#777783;font-size:12px;line-height:1.45;margin-top:18px}
+@media(min-width:700px){.grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<h1>Мои приложения</h1>
+<p class="sub">Установка приложений на iPhone через системный механизм iOS.</p>
+<div class="notice">
+Если приложение было получено через определённый Apple ID, перед первым запуском войдите в него только через
+<b>Настройки → Apple Account → Контент и покупки</b>.
+</div>
+<section class="grid" id="apps"></section>
+<section class="guide">
+<h2>Как установить</h2>
+<div class="step">1. Откройте страницу в Safari.</div>
+<div class="step">2. Нажмите «Установить».</div>
+<div class="step">3. Подтвердите системное окно iOS.</div>
+<div class="step">4. После установки откройте приложение хотя бы один раз.</div>
+</section>
+<div class="foot">Страница только открывает <code>itms-services://</code> с вашим manifest.</div>
+</main>
+<script>
+const apps = [
+  {
+    name:"PREMIER",
+    version:"2.34.0",
+    initials:"PR",
+    manifest:"https://storage.yandexcloud.net/sbol1234/premier.plist"
+  },
+  {
+    name:"MAX",
+    version:"26.17.3",
+    initials:"MAX",
+    manifest:"https://storage.yandexcloud.net/sbol1234/max.plist"
+  }
+];
+
+function installUrl(url){
+  return "itms-services://?action=download-manifest&url=" + encodeURIComponent(url);
+}
+
+const root = document.getElementById("apps");
+for (const app of apps){
+  const url = installUrl(app.manifest);
+  const el = document.createElement("article");
+  el.className = "card";
+  el.innerHTML = `
+    <div class="row">
+      <div class="icon">${app.initials}</div>
+      <div class="meta">
+        <div class="name">${app.name}</div>
+        <div class="ver">Версия ${app.version}</div>
+      </div>
+    </div>
+    <div class="actions">
+      <a class="btn" href="${url}">Установить</a>
+      <button class="copy" type="button">Ссылка</button>
+    </div>`;
+  el.querySelector(".copy").onclick = async () => {
+    try { await navigator.clipboard.writeText(url); alert("Ссылка скопирована"); }
+    catch(e) { prompt("Скопируйте ссылку:", url); }
+  };
+  root.appendChild(el);
+}
+</script>
+</body>
+</html>
