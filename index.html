@@ -58,9 +58,11 @@
     }
     .brand{display:flex;align-items:center;gap:14px;min-width:0}
     .brand-logo{
-      width:42px;height:42px;border-radius:14px;overflow:hidden;flex:none;
+      width:92px;height:46px;border-radius:12px;overflow:hidden;flex:none;
       background:#fff;border:1px solid rgba(255,255,255,.14);box-shadow:var(--shadow);
+      padding:3px;
     }
+    .brand-logo img{width:100%;height:100%;object-fit:contain}
     .brand-title{font-weight:800;font-size:19px;letter-spacing:-.03em}
     .brand-sub{color:var(--muted-2);font-size:12px;margin-top:2px}
     .nav{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
@@ -72,7 +74,7 @@
     .hero{padding:42px 0 24px}
     .hero-grid{
       display:grid;gap:20px;align-items:stretch;
-      grid-template-columns:1.2fr .8fr;
+      grid-template-columns:1fr;
     }
 
     .hero-main,.hero-side,.notice,.apps-wrap,.steps-wrap,.faq-wrap,.footer-card{
@@ -167,33 +169,375 @@
     }
     .notice h4{margin:0 0 6px;font-size:18px;letter-spacing:-.02em}
     .notice p{margin:0;color:var(--muted);line-height:1.55}
-    .prelaunch-guide{margin-top:16px}
-    .prelaunch-guide details{
-      border-radius:20px;overflow:hidden;background:rgba(255,255,255,.035);
-      border:1px solid rgba(255,255,255,.07)
+    .prelaunch-guide{
+      margin-top:18px;padding-top:17px;border-top:1px solid rgba(255,255,255,.08)
     }
-    .prelaunch-guide summary{
-      display:flex;align-items:center;justify-content:space-between;gap:12px;
-      list-style:none;cursor:pointer;padding:15px 16px;font-weight:800;color:#eef4ff
+    .guide-intro{color:var(--muted);line-height:1.55;font-size:14px;margin-bottom:12px}
+    .guide-intro strong{display:block;color:#eef4ff;font-size:16px;margin-bottom:4px}
+
+    /* Screenshot story — compact square collage */
+    .guide-gallery{
+      width:min(100%,540px);
+      margin:14px auto 0;
+      padding:10px;
+      border-radius:26px;
+      position:relative;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 12% 10%,rgba(107,150,255,.18),transparent 34%),
+        linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.025));
+      border:1px solid rgba(255,255,255,.11);
+      box-shadow:0 20px 44px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.045);
     }
-    .prelaunch-guide summary::-webkit-details-marker{display:none}
-    .prelaunch-guide summary::after{content:'+';font-size:24px;color:#b9c8e4;line-height:1}
-    .prelaunch-guide details[open] summary::after{content:'−'}
-    .guide-intro{padding:0 16px 16px;color:var(--muted);line-height:1.55;font-size:14px}
-    .guide-grid{
-      display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:0 16px 16px
+    .guide-gallery-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:2px 3px 10px;
     }
-    .guide-card{
-      border-radius:18px;overflow:hidden;background:rgba(255,255,255,.03);
-      border:1px solid rgba(255,255,255,.06)
+    .guide-gallery-title{
+      display:flex;
+      align-items:center;
+      gap:9px;
+      color:#f3f7ff;
+      font-size:13px;
+      font-weight:800;
+      letter-spacing:-.01em;
     }
-    .guide-card img{width:100%;height:auto;display:block;background:#000}
-    .guide-card figcaption{padding:12px 13px 14px;color:#dce6ff;font-size:13px;line-height:1.45}
-    .guide-card figcaption strong{display:block;color:#fff;font-size:14px;margin-bottom:3px}
+    .guide-gallery-title::before{
+      content:"7";
+      width:27px;
+      height:27px;
+      border-radius:9px;
+      display:grid;
+      place-items:center;
+      color:white;
+      font-size:12px;
+      background:linear-gradient(180deg,#8db5ff,#648fff);
+      box-shadow:0 7px 18px rgba(91,140,255,.28);
+    }
+    .guide-gallery-hint{
+      color:var(--muted-2);
+      font-size:11px;
+      white-space:nowrap;
+    }
+    .guide-collage{
+      width:100%;
+      aspect-ratio:1/1;
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      grid-template-rows:repeat(4,1fr);
+      gap:6px;
+      border-radius:18px;
+      overflow:hidden;
+      background:#050911;
+    }
+    .guide-tile{
+      position:relative;
+      overflow:hidden;
+      border:0;
+      padding:0;
+      margin:0;
+      cursor:pointer;
+      background:#000;
+      border-radius:10px;
+      min-width:0;
+      min-height:0;
+      isolation:isolate;
+    }
+    .guide-tile img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      object-position:50% 38%;
+      display:block;
+      transform:scale(1.012);
+      transition:transform .24s ease,filter .24s ease,opacity .24s ease;
+    }
+    .guide-tile::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:1;
+      background:linear-gradient(180deg,transparent 50%,rgba(0,0,0,.26));
+      pointer-events:none;
+    }
+    .guide-tile::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:2;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:inherit;
+      pointer-events:none;
+    }
+    .guide-tile .guide-step-badge{
+      position:absolute;
+      left:7px;
+      bottom:7px;
+      z-index:3;
+      min-width:25px;
+      height:25px;
+      padding:0 8px;
+      border-radius:9px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      font-size:10px;
+      font-weight:800;
+      background:rgba(8,13,24,.74);
+      border:1px solid rgba(255,255,255,.14);
+      backdrop-filter:blur(8px);
+      -webkit-backdrop-filter:blur(8px);
+      box-shadow:0 7px 20px rgba(0,0,0,.24);
+    }
+    .guide-tile:hover img{transform:scale(1.055);filter:brightness(1.06)}
+    .guide-tile:active img{transform:scale(1.02)}
+
+    /* Bento fills every cell: no empty area */
+    .guide-tile:nth-child(1){grid-column:1 / span 2;grid-row:1 / span 2}
+    .guide-tile:nth-child(2){grid-column:3 / span 2;grid-row:1 / span 1}
+    .guide-tile:nth-child(3){grid-column:3 / span 1;grid-row:2 / span 1}
+    .guide-tile:nth-child(4){grid-column:4 / span 1;grid-row:2 / span 1}
+    .guide-tile:nth-child(5){grid-column:1 / span 1;grid-row:3 / span 2}
+    .guide-tile:nth-child(6){grid-column:2 / span 2;grid-row:3 / span 2}
+    .guide-tile:nth-child(7){grid-column:4 / span 1;grid-row:3 / span 2}
+
+    .guide-tap{
+      margin:10px auto 0;
+      width:min(100%,540px);
+      color:var(--muted-2);
+      font-size:12px;
+      line-height:1.45;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:0 3px;
+    }
+    .guide-tap::before{
+      content:"↔";
+      display:inline-grid;
+      place-items:center;
+      width:24px;
+      height:24px;
+      flex:none;
+      border-radius:8px;
+      background:rgba(107,150,255,.1);
+      color:#c5d6ff;
+      border:1px solid rgba(107,150,255,.16);
+    }
+
+    /* Full-screen gallery / carousel */
+    .guide-lightbox{
+      position:fixed;
+      inset:0;
+      z-index:1000;
+      display:none;
+      background:rgba(2,6,13,.93);
+      backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      padding:max(14px,env(safe-area-inset-top)) 12px max(14px,env(safe-area-inset-bottom));
+    }
+    .guide-lightbox.is-open{display:flex;animation:guideFade .18s ease both}
+    @keyframes guideFade{from{opacity:0}to{opacity:1}}
+    .guide-lightbox-inner{
+      width:100%;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      max-width:1040px;
+      margin:auto;
+    }
+    .guide-lightbox-top{
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:0 2px 10px;
+    }
+    .guide-lightbox-title{
+      min-width:0;
+      color:#f5f8ff;
+      font-size:15px;
+      font-weight:800;
+      letter-spacing:-.015em;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .guide-lightbox-close{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.11);
+      background:rgba(255,255,255,.075);
+      color:white;
+      font-size:26px;
+      line-height:1;
+      cursor:pointer;
+      flex:none;
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+    }
+    .guide-lightbox-image-wrap{
+      width:100%;
+      min-height:0;
+      flex:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      touch-action:pan-y;
+      position:relative;
+      border-radius:22px;
+    }
+    .guide-lightbox-image-wrap::before{
+      content:"";
+      position:absolute;
+      inset:8% 13%;
+      border-radius:40px;
+      background:radial-gradient(circle,rgba(89,132,255,.16),transparent 65%);
+      filter:blur(28px);
+      pointer-events:none;
+    }
+    .guide-lightbox-image{
+      max-width:100%;
+      max-height:100%;
+      width:auto;
+      height:auto;
+      object-fit:contain;
+      border-radius:18px;
+      box-shadow:0 26px 76px rgba(0,0,0,.52);
+      user-select:none;
+      -webkit-user-drag:none;
+      position:relative;
+      z-index:1;
+      transition:opacity .12s ease,transform .12s ease;
+    }
+    .guide-lightbox-image.is-changing{opacity:.42;transform:scale(.985)}
+    .guide-lightbox-nav{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      width:48px;
+      height:58px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.11);
+      background:rgba(9,15,27,.66);
+      color:#fff;
+      font-size:30px;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      z-index:4;
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+      box-shadow:0 12px 28px rgba(0,0,0,.25);
+    }
+    .guide-lightbox-prev{left:6px}
+    .guide-lightbox-next{right:6px}
+    .guide-lightbox-bottom{
+      width:100%;
+      padding-top:11px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:9px;
+    }
+    .guide-lightbox-meta{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      color:#b8c7e2;
+      font-size:12px;
+    }
+    .guide-lightbox-counter{
+      color:#eef4ff;
+      font-weight:800;
+      padding:5px 9px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .guide-lightbox-dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+    .guide-lightbox-dot{
+      width:6px;
+      height:6px;
+      border-radius:999px;
+      background:rgba(255,255,255,.22);
+      transition:width .18s ease,background .18s ease;
+    }
+    .guide-lightbox-dot.is-active{width:20px;background:#7ea5ff}
+    .guide-filmstrip{
+      width:min(100%,560px);
+      display:flex;
+      gap:7px;
+      overflow-x:auto;
+      padding:3px 2px 2px;
+      scrollbar-width:none;
+      -webkit-overflow-scrolling:touch;
+      scroll-snap-type:x proximity;
+    }
+    .guide-filmstrip::-webkit-scrollbar{display:none}
+    .guide-thumb{
+      width:44px;
+      height:62px;
+      flex:0 0 auto;
+      padding:0;
+      border-radius:9px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.08);
+      background:#050911;
+      opacity:.48;
+      cursor:pointer;
+      scroll-snap-align:center;
+      transition:opacity .16s ease,transform .16s ease,border-color .16s ease;
+    }
+    .guide-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .guide-thumb.is-active{
+      opacity:1;
+      transform:translateY(-2px);
+      border-color:rgba(126,165,255,.7);
+      box-shadow:0 8px 22px rgba(71,112,224,.26);
+    }
+
+    @media (max-width:560px){
+      .guide-gallery{padding:7px;border-radius:21px}
+      .guide-gallery-head{padding:1px 2px 8px}
+      .guide-collage{gap:4px;border-radius:15px}
+      .guide-tile{border-radius:8px}
+      .guide-tile .guide-step-badge{left:5px;bottom:5px;height:21px;min-width:21px;padding:0 6px;border-radius:7px;font-size:9px}
+      .guide-gallery-hint{font-size:10px}
+      .guide-lightbox{padding-left:7px;padding-right:7px}
+      .guide-lightbox-nav{width:40px;height:50px;border-radius:13px;font-size:26px;background:rgba(9,15,27,.52)}
+      .guide-lightbox-prev{left:0}.guide-lightbox-next{right:0}
+      .guide-lightbox-image{border-radius:14px}
+      .guide-thumb{width:40px;height:56px}
+    }
+
     .return-note{
-      margin-top:14px;padding:14px 15px;border-radius:18px;
+      margin-top:16px;padding:14px 15px;border-radius:18px;
       background:rgba(107,150,255,.08);border:1px solid rgba(107,150,255,.16);
       color:#dce7ff;line-height:1.5;font-size:14px
+    }
+
+    @media (max-width:560px){
+      .guide-collage{gap:5px;padding:5px;border-radius:18px}
+      .guide-tile{border-radius:10px}
+      .guide-lightbox{padding-left:8px;padding-right:8px}
+      .guide-lightbox-nav{
+        width:42px;height:52px;border-radius:14px;font-size:27px;
+        background:rgba(11,18,31,.58);
+      }
+      .guide-lightbox-prev{left:0}
+      .guide-lightbox-next{right:0}
+      .guide-lightbox-image{border-radius:14px}
     }
 
     .section-head{
@@ -254,7 +598,7 @@
     }
 
     .app-actions{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:18px}
-    .app-note{margin-top:12px;color:#b8c7e2;font-size:13px;line-height:1.5}
+    .app-note{margin:12px auto 0;color:#b8c7e2;font-size:13px;line-height:1.5}
 
     .steps-faq{display:grid;grid-template-columns:1.02fr .98fr;gap:18px;margin-top:20px}
     .steps-wrap,.faq-wrap{border-radius:var(--radius-xl);padding:22px}
@@ -398,21 +742,6 @@
             </div>
           </div>
         </div>
-
-        <aside class="hero-side fade-up delay-1">
-          <div class="hero-logo"><img src="logo.png" alt="OSi Store logo"></div>
-          <h3>OSi Store</h3>
-          <p>
-            Лаконичный каталог приложений с единым оформлением,
-            поиском и понятной навигацией.
-          </p>
-          <div class="chips">
-            <span class="chip">Тёмная тема</span>
-            <span class="chip">Адаптация под iPhone</span>
-            <span class="chip">Поиск</span>
-            <span class="chip">GitHub Pages</span>
-          </div>
-        </aside>
       </div>
     </section>
 
@@ -427,47 +756,33 @@
         </p>
 
         <div class="prelaunch-guide">
-          <details>
-            <summary>Показать пошаговую инструкцию со скриншотами</summary>
-            <div class="guide-intro">
-              На скриншотах персональные данные скрыты. Используйте этот способ только для раздела
-              <b>«Контент и покупки»</b> — основной аккаунт iCloud менять не нужно.
+          <div class="guide-intro">
+            <strong>Пошаговая инструкция</strong>
+            На скриншотах персональные данные скрыты. Используйте этот способ только для раздела
+            <b>«Контент и покупки»</b> — основной аккаунт iCloud менять не нужно.
+          </div>
+
+          <div class="guide-gallery">
+            <div class="guide-gallery-head">
+              <div class="guide-gallery-title">Пошаговая инструкция</div>
+              <div class="guide-gallery-hint">Нажмите для просмотра</div>
             </div>
-            <div class="guide-grid">
-              <figure class="guide-card">
-                <img src="guide-step-1.png" alt="Шаг 1 — открыть Apple Account" loading="lazy">
-                <figcaption><strong>Шаг 1</strong>Откройте Apple Account в «Настройках».</figcaption>
-              </figure>
-              <figure class="guide-card">
-                <img src="guide-step-2.png" alt="Шаг 2 — открыть Контент и покупки" loading="lazy">
-                <figcaption><strong>Шаг 2</strong>Нажмите «Контент и покупки».</figcaption>
-              </figure>
-              <figure class="guide-card">
-                <img src="guide-step-3.png" alt="Шаг 3 — выйти из текущего аккаунта Контент и покупки" loading="lazy">
-                <figcaption><strong>Шаг 3</strong>Выберите «Выйти» для текущего аккаунта «Контент и покупки».</figcaption>
-              </figure>
-              <figure class="guide-card">
-                <img src="guide-step-4.png" alt="Шаг 4 — подтвердить выход" loading="lazy">
-                <figcaption><strong>Шаг 4</strong>Подтвердите выход.</figcaption>
-              </figure>
-              <figure class="guide-card">
-                <img src="guide-step-5.png" alt="Шаг 5 — настроить Контент и покупки" loading="lazy">
-                <figcaption><strong>Шаг 5</strong>Нажмите «Настроить» рядом с «Контент и покупки».</figcaption>
-              </figure>
-              <figure class="guide-card">
-                <img src="guide-step-6.png" alt="Шаг 6 — выбрать другой Apple ID" loading="lazy">
-                <figcaption><strong>Шаг 6</strong>Если требуется другой Apple ID, выберите соответствующую кнопку.</figcaption>
-              </figure>
-              <figure class="guide-card">
-                <img src="guide-step-7.png" alt="Шаг 7 — ввести Apple ID" loading="lazy">
-                <figcaption><strong>Шаг 7</strong>Введите Apple ID, с которым связано приложение, и завершите вход.</figcaption>
-              </figure>
+            <div class="guide-collage" aria-label="Пошаговая инструкция в скриншотах">
+              <button class="guide-tile" type="button" data-guide-index="0" aria-label="Открыть шаг 1"><img src="guide-step-1.png" alt="Шаг 1 — открыть Apple Account" loading="lazy"><span class="guide-step-badge">1</span></button>
+              <button class="guide-tile" type="button" data-guide-index="1" aria-label="Открыть шаг 2"><img src="guide-step-2.png" alt="Шаг 2 — открыть Контент и покупки" loading="lazy"><span class="guide-step-badge">2</span></button>
+              <button class="guide-tile" type="button" data-guide-index="2" aria-label="Открыть шаг 3"><img src="guide-step-3.png" alt="Шаг 3 — выйти из текущего аккаунта Контент и покупки" loading="lazy"><span class="guide-step-badge">3</span></button>
+              <button class="guide-tile" type="button" data-guide-index="3" aria-label="Открыть шаг 4"><img src="guide-step-4.png" alt="Шаг 4 — подтвердить выход" loading="lazy"><span class="guide-step-badge">4</span></button>
+              <button class="guide-tile" type="button" data-guide-index="4" aria-label="Открыть шаг 5"><img src="guide-step-5.png" alt="Шаг 5 — настроить Контент и покупки" loading="lazy"><span class="guide-step-badge">5</span></button>
+              <button class="guide-tile" type="button" data-guide-index="5" aria-label="Открыть шаг 6"><img src="guide-step-6.png" alt="Шаг 6 — выбрать другой Apple ID" loading="lazy"><span class="guide-step-badge">6</span></button>
+              <button class="guide-tile" type="button" data-guide-index="6" aria-label="Открыть шаг 7"><img src="guide-step-7.png" alt="Шаг 7 — ввести Apple ID" loading="lazy"><span class="guide-step-badge">7</span></button>
             </div>
-            <div class="return-note">
-              <b>После первого запуска:</b> вернитесь в <b>Настройки → Apple Account → Контент и покупки</b>,
-              выйдите из временного Apple ID и войдите обратно под своим Apple ID.
-            </div>
-          </details>
+          </div>
+          <div class="guide-tap">Откройте любой шаг — затем листайте свайпом или стрелками.</div>
+
+          <div class="return-note">
+            <b>После первого успешного запуска:</b> вернитесь в <b>Настройки → Apple Account → Контент и покупки</b>,
+            выйдите из временного Apple ID и снова войдите под своим Apple ID.
+          </div>
         </div>
       </div>
     </section>
@@ -567,6 +882,31 @@
         </div>
       </div>
     </section>
+
+    <div class="guide-lightbox" id="guideLightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Пошаговая инструкция">
+      <div class="guide-lightbox-inner">
+        <div class="guide-lightbox-top">
+          <div class="guide-lightbox-title" id="guideLightboxTitle">Шаг 1</div>
+          <button class="guide-lightbox-close" id="guideLightboxClose" type="button" aria-label="Закрыть">×</button>
+        </div>
+
+        <div class="guide-lightbox-image-wrap" id="guideSwipeArea">
+          <button class="guide-lightbox-nav guide-lightbox-prev" id="guidePrev" type="button" aria-label="Предыдущий скриншот">‹</button>
+          <img class="guide-lightbox-image" id="guideLightboxImage" src="guide-step-1.png" alt="">
+          <button class="guide-lightbox-nav guide-lightbox-next" id="guideNext" type="button" aria-label="Следующий скриншот">›</button>
+        </div>
+
+        <div class="guide-lightbox-bottom">
+          <div class="guide-lightbox-meta">
+            <span>Свайпните в сторону</span>
+            <span class="guide-lightbox-counter" id="guideCounter">1 / 7</span>
+          </div>
+          <div class="guide-lightbox-dots" id="guideDots" aria-hidden="true"></div>
+          <div class="guide-filmstrip" id="guideFilmstrip" aria-label="Миниатюры шагов"></div>
+        </div>
+      </div>
+    </div>
+
 
     <section class="footer-card">
       <div>
@@ -698,6 +1038,121 @@
         grid.appendChild(card);
       });
     }
+
+
+    const GUIDE_IMAGES = [
+      {src:'guide-step-1.png', title:'Шаг 1 — откройте Apple Account'},
+      {src:'guide-step-2.png', title:'Шаг 2 — Контент и покупки'},
+      {src:'guide-step-3.png', title:'Шаг 3 — выберите «Выйти»'},
+      {src:'guide-step-4.png', title:'Шаг 4 — подтвердите выход'},
+      {src:'guide-step-5.png', title:'Шаг 5 — нажмите «Настроить»'},
+      {src:'guide-step-6.png', title:'Шаг 6 — выберите другой Apple ID'},
+      {src:'guide-step-7.png', title:'Шаг 7 — введите Apple ID'}
+    ];
+
+    const guideLightbox = document.getElementById('guideLightbox');
+    const guideLightboxImage = document.getElementById('guideLightboxImage');
+    const guideLightboxTitle = document.getElementById('guideLightboxTitle');
+    const guideCounter = document.getElementById('guideCounter');
+    const guideDots = document.getElementById('guideDots');
+    const guideFilmstrip = document.getElementById('guideFilmstrip');
+    const guideClose = document.getElementById('guideLightboxClose');
+    const guidePrev = document.getElementById('guidePrev');
+    const guideNext = document.getElementById('guideNext');
+    const guideSwipeArea = document.getElementById('guideSwipeArea');
+    let guideIndex = 0;
+    let guideTouchStartX = 0;
+    let guideTouchStartY = 0;
+
+    GUIDE_IMAGES.forEach((item, i) => {
+      const dot = document.createElement('span');
+      dot.className = 'guide-lightbox-dot';
+      dot.dataset.index = i;
+      guideDots.appendChild(dot);
+
+      const thumb = document.createElement('button');
+      thumb.type = 'button';
+      thumb.className = 'guide-thumb';
+      thumb.dataset.index = i;
+      thumb.setAttribute('aria-label', `Открыть шаг ${i + 1}`);
+      thumb.innerHTML = `<img src="${item.src}" alt="">`;
+      thumb.addEventListener('click', () => {
+        guideIndex = i;
+        updateGuideLightbox(true);
+      });
+      guideFilmstrip.appendChild(thumb);
+    });
+
+    function updateGuideLightbox(animate=false){
+      const item = GUIDE_IMAGES[guideIndex];
+      if(animate) guideLightboxImage.classList.add('is-changing');
+      window.setTimeout(() => {
+        guideLightboxImage.src = item.src;
+        guideLightboxImage.alt = item.title;
+        guideLightboxTitle.textContent = item.title;
+        guideCounter.textContent = `${guideIndex + 1} / ${GUIDE_IMAGES.length}`;
+        [...guideDots.children].forEach((dot, i) => dot.classList.toggle('is-active', i === guideIndex));
+        [...guideFilmstrip.children].forEach((thumb, i) => {
+          thumb.classList.toggle('is-active', i === guideIndex);
+          if(i === guideIndex) thumb.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+        });
+        guideLightboxImage.classList.remove('is-changing');
+      }, animate ? 90 : 0);
+    }
+
+    function openGuide(index){
+      guideIndex = index;
+      updateGuideLightbox();
+      guideLightbox.classList.add('is-open');
+      guideLightbox.setAttribute('aria-hidden','false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeGuide(){
+      guideLightbox.classList.remove('is-open');
+      guideLightbox.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+    }
+
+    function moveGuide(direction){
+      guideIndex = (guideIndex + direction + GUIDE_IMAGES.length) % GUIDE_IMAGES.length;
+      updateGuideLightbox(true);
+    }
+
+    document.querySelectorAll('.guide-tile').forEach(tile => {
+      tile.addEventListener('click', () => openGuide(Number(tile.dataset.guideIndex)));
+    });
+
+    guideClose.addEventListener('click', closeGuide);
+    guidePrev.addEventListener('click', () => moveGuide(-1));
+    guideNext.addEventListener('click', () => moveGuide(1));
+
+    guideLightbox.addEventListener('click', e => {
+      if(e.target === guideLightbox) closeGuide();
+    });
+
+    document.addEventListener('keydown', e => {
+      if(!guideLightbox.classList.contains('is-open')) return;
+      if(e.key === 'Escape') closeGuide();
+      if(e.key === 'ArrowLeft') moveGuide(-1);
+      if(e.key === 'ArrowRight') moveGuide(1);
+    });
+
+    guideSwipeArea.addEventListener('touchstart', e => {
+      if(!e.touches || !e.touches.length) return;
+      guideTouchStartX = e.touches[0].clientX;
+      guideTouchStartY = e.touches[0].clientY;
+    }, {passive:true});
+
+    guideSwipeArea.addEventListener('touchend', e => {
+      if(!e.changedTouches || !e.changedTouches.length) return;
+      const dx = e.changedTouches[0].clientX - guideTouchStartX;
+      const dy = e.changedTouches[0].clientY - guideTouchStartY;
+      if(Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.2){
+        moveGuide(dx < 0 ? 1 : -1);
+      }
+    }, {passive:true});
+
 
     input.addEventListener('input', e => render(e.target.value));
     render();
