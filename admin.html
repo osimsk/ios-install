@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07111f">
+<title>OSi Store · PLIST Generator</title>
+<style>
+:root{
+  --bg:#050b14;--panel:#101b2d;--panel2:#13213a;--line:rgba(255,255,255,.08);
+  --text:#f5f8ff;--muted:#9fb0cb;--primary:#6b96ff;--primary2:#8ab3ff;--ok:#6ce6b4;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+  color:var(--text);background:
+  radial-gradient(circle at 0 0,rgba(82,118,255,.22),transparent 30%),
+  linear-gradient(180deg,#081222,#050b14 60%,#03070e);
+  min-height:100vh;
+}
+.wrap{max-width:760px;margin:auto;padding:24px 16px 56px}
+.header{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.logo{width:52px;height:52px;border-radius:16px;overflow:hidden;background:#fff;border:1px solid var(--line)}
+.logo img{width:100%;height:100%;object-fit:cover}
+h1{margin:0;font-size:28px;letter-spacing:-.03em}
+.sub{color:var(--muted);margin-top:4px;font-size:14px}
+.card{
+  background:linear-gradient(180deg,rgba(19,33,58,.95),rgba(11,18,33,.98));
+  border:1px solid var(--line);border-radius:24px;padding:18px;margin-bottom:16px;
+  box-shadow:0 20px 50px rgba(0,0,0,.32)
+}
+label{display:block;font-size:13px;color:#dce6ff;margin:14px 0 7px}
+input,textarea{
+  width:100%;border:1px solid var(--line);background:rgba(255,255,255,.045);
+  color:var(--text);border-radius:14px;padding:14px 15px;font-size:16px;outline:none
+}
+input:focus,textarea:focus{border-color:rgba(107,150,255,.55)}
+textarea{min-height:210px;resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+button{
+  border:0;border-radius:15px;padding:14px 16px;font-size:16px;font-weight:800;cursor:pointer
+}
+.primary{background:linear-gradient(180deg,var(--primary2),var(--primary));color:white}
+.secondary{background:rgba(255,255,255,.06);color:#eef4ff;border:1px solid var(--line)}
+.note{color:var(--muted);font-size:13px;line-height:1.5;margin-top:12px}
+.ok{color:var(--ok);font-size:13px;margin-top:10px;display:none}
+@media(max-width:620px){.row,.btns{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="header">
+    <div class="logo"><img src="logo.png" alt="OSi Store"></div>
+    <div>
+      <h1>PLIST Generator</h1>
+      <div class="sub">Создание manifest.plist для установки IPA</div>
+    </div>
+  </div>
+
+  <section class="card">
+    <label for="title">Название приложения</label>
+    <input id="title" placeholder="Например: PREMIER">
+
+    <label for="ipa">Прямая HTTPS-ссылка на IPA</label>
+    <input id="ipa" placeholder="https://storage.yandexcloud.net/sbol1234/App.ipa">
+
+    <div class="row">
+      <div>
+        <label for="bundle">Bundle ID</label>
+        <input id="bundle" placeholder="com.example.app">
+      </div>
+      <div>
+        <label for="build">Build / Bundle Version</label>
+        <input id="build" placeholder="12345">
+      </div>
+    </div>
+
+    <label for="filename">Имя PLIST-файла</label>
+    <input id="filename" placeholder="app.plist">
+
+    <div class="btns">
+      <button class="primary" id="generate">Создать PLIST</button>
+      <button class="secondary" id="download" disabled>Скачать .plist</button>
+    </div>
+
+    <div class="ok" id="ok">PLIST готов.</div>
+    <div class="note">
+      Нужны именно <b>Bundle ID</b> и <b>Build / Bundle Version</b>. Маркетинговая версия вроде 2.34.0 для manifest не обязательна.
+    </div>
+  </section>
+
+  <section class="card">
+    <label for="output">Готовый XML</label>
+    <textarea id="output" readonly placeholder="Здесь появится содержимое manifest.plist"></textarea>
+    <div class="btns">
+      <button class="secondary" id="copy">Скопировать XML</button>
+      <button class="secondary" id="clear">Очистить</button>
+    </div>
+  </section>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+let lastXml = '';
+
+function esc(s){
+  return String(s).replace(/[&<>"']/g, ch => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'
+  }[ch]));
+}
+
+function normalizeFilename(name){
+  let n = (name || 'manifest.plist').trim();
+  if(!n.toLowerCase().endsWith('.plist')) n += '.plist';
+  return n.replace(/[\\/:*?"<>|]+/g,'-');
+}
+
+function buildPlist(){
+  const title = $('title').value.trim();
+  const ipa = $('ipa').value.trim();
+  const bundle = $('bundle').value.trim();
+  const build = $('build').value.trim();
+
+  if(!title || !ipa || !bundle || !build){
+    alert('Заполните название, IPA URL, Bundle ID и Build.');
+    return;
+  }
+  if(!ipa.startsWith('https://')){
+    alert('IPA должен быть доступен по прямой HTTPS-ссылке.');
+    return;
+  }
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>items</key>
+  <array>
+    <dict>
+      <key>assets</key>
+      <array>
+        <dict>
+          <key>kind</key>
+          <string>software-package</string>
+          <key>url</key>
+          <string>${esc(ipa)}</string>
+        </dict>
+      </array>
+      <key>metadata</key>
+      <dict>
+        <key>bundle-identifier</key>
+        <string>${esc(bundle)}</string>
+        <key>bundle-version</key>
+        <string>${esc(build)}</string>
+        <key>kind</key>
+        <string>software</string>
+        <key>title</key>
+        <string>${esc(title)}</string>
+      </dict>
+    </dict>
+  </array>
+</dict>
+</plist>`;
+
+  lastXml = xml;
+  $('output').value = xml;
+  $('download').disabled = false;
+  $('ok').style.display = 'block';
+
+  if(!$('filename').value.trim()){
+    $('filename').value = title.toLowerCase().replace(/[^a-z0-9а-яё_-]+/gi,'-') + '.plist';
+  }
+}
+
+$('generate').addEventListener('click', buildPlist);
+
+$('download').addEventListener('click', () => {
+  if(!lastXml) return;
+  const blob = new Blob([lastXml], {type:'application/xml;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = normalizeFilename($('filename').value);
+  document.body.appendChild(a);
+  a.click();
+  URL.revokeObjectURL(a.href);
+  a.remove();
+});
+
+$('copy').addEventListener('click', async () => {
+  if(!$('output').value) return;
+  try{
+    await navigator.clipboard.writeText($('output').value);
+    alert('XML скопирован');
+  }catch{
+    $('output').select();
+    document.execCommand('copy');
+    alert('XML скопирован');
+  }
+});
+
+$('clear').addEventListener('click', () => {
+  ['title','ipa','bundle','build','filename','output'].forEach(id => $(id).value='');
+  lastXml='';
+  $('download').disabled=true;
+  $('ok').style.display='none';
+});
+</script>
+</body>
+</html>
