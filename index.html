@@ -581,6 +581,7 @@
       background:linear-gradient(135deg,#243a67,#101828);
       display:grid;place-items:center;box-shadow:0 16px 26px rgba(0,0,0,.3)
     }
+    .app-icon img{width:100%;height:100%;display:block;object-fit:cover}
     .app-icon .fallback{font-weight:900;font-size:30px;letter-spacing:-.05em;color:#fff}
     .app-name{font-size:32px;font-weight:900;letter-spacing:-.05em;line-height:1}
     .app-version{color:#dbe6ff;font-size:15px;margin-top:8px}
@@ -793,7 +794,7 @@
           <h2>Каталог приложений</h2>
           <p>Название, версия и быстрый переход к установке.</p>
         </div>
-        <p id="countLabel">2 приложения</p>
+        <p id="countLabel">3 приложения</p>
       </div>
 
       <label class="searchbar" aria-label="Поиск по приложениям">
@@ -924,6 +925,7 @@
     const APPS = [
       {
         name: 'PREMIER',
+        versionText: 'Версия 2.34.0',
         version: '2.34.0',
         category: 'Видео',
         subtitle: 'Онлайн-кинотеатр и медиасервис.',
@@ -931,10 +933,12 @@
         device: 'iPhone',
         initials: 'PR',
         accent: '#C59AFF',
+        icon: 'https://rskrf.ru/upload/resize_cache/iblock/4b3/660_668_240cd750bba9870f18aada2478b24840a/9grsedrertd5bpws0wyndvkl2ea7ri6a.jpg',
         manifest: 'https://storage.yandexcloud.net/sbol1234/premier.plist'
       },
       {
         name: 'MAX',
+        versionText: 'Версия 26.17.3',
         version: '26.17.3',
         category: 'Связь',
         subtitle: 'Приложение MAX для общения и сервисов.',
@@ -942,7 +946,21 @@
         device: 'iPhone',
         initials: 'MX',
         accent: '#7EE3FF',
+        icon: 'https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/79/7f/bc/797fbc00-b714-e340-a8fd-196136f6d198/AppIcon-0-0-1x_U007ephone-0-1-sRGB-85-220.png/512x512bb.png',
         manifest: 'https://storage.yandexcloud.net/sbol1234/max.plist'
+      },
+      {
+        name: 'Cloud Mail',
+        versionText: 'Сборка 44938495',
+        version: '44938495',
+        category: 'Облако',
+        subtitle: 'Фото, файлы и документы в Облаке Mail.',
+        status: 'Готово к установке',
+        device: 'iPhone',
+        initials: 'CL',
+        accent: '#2589FF',
+        icon: 'https://rskrf.ru/upload/iblock/ce7/dejjzozmreo51j4tbmddlsd0tw9s9ucn.png',
+        manifest: 'https://storage.yandexcloud.net/sbol1234/Cloud-Mail.plist'
       }
     ];
 
@@ -980,6 +998,7 @@
         const hay = [
           app.name,
           app.version,
+          app.versionText,
           app.category,
           app.subtitle,
           app.status
@@ -1007,12 +1026,16 @@
                   linear-gradient(135deg,#263a66,#101828)
               "
             >
-              <div class="fallback">${app.initials}</div>
+              ${app.icon
+                ? `<img src="${app.icon}" alt="${app.name}" loading="lazy" referrerpolicy="no-referrer"
+                     onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">`
+                : ''}
+              <div class="fallback" style="${app.icon ? 'display:none' : 'display:grid'}">${app.initials}</div>
             </div>
 
             <div>
               <div class="app-name">${app.name}</div>
-              <div class="app-version">Версия ${app.version}</div>
+              <div class="app-version">${app.versionText || `Версия ${app.version}`}</div>
             </div>
           </div>
 
