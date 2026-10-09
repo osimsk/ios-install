@@ -557,6 +557,20 @@
     }
     .searchbar .icon{color:var(--muted)}
 
+    .catalog-filters{
+      display:flex;align-items:center;gap:8px;overflow-x:auto;scrollbar-width:none;
+      -webkit-overflow-scrolling:touch;padding:0 0 15px;margin-top:-2px;
+    }
+    .catalog-filters::-webkit-scrollbar{display:none}
+    .catalog-filter{
+      appearance:none;border:1px solid rgba(255,255,255,.085);background:rgba(255,255,255,.045);
+      color:#c9d7f3;border-radius:999px;padding:10px 14px;font:inherit;font-size:13px;
+      font-weight:700;cursor:pointer;flex:none;white-space:nowrap;
+    }
+    .catalog-filter.is-active{
+      color:#fff;background:linear-gradient(180deg,#83aaff,#597fff);
+      border-color:rgba(143,181,255,.65);box-shadow:0 8px 20px rgba(92,136,255,.18)
+    }
     .apps-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
     .app-card{
       border-radius:28px;padding:20px;position:relative;overflow:hidden;
@@ -792,9 +806,9 @@
       <div class="section-head">
         <div>
           <h2>Каталог приложений</h2>
-          <p>Название, версия и быстрый переход к установке.</p>
+          <p>Приложения и сборки по категориям. Статус «Не проверено» означает, что установка ещё не тестировалась.</p>
         </div>
-        <p id="countLabel">3 приложения</p>
+        <p id="countLabel">24 приложения</p>
       </div>
 
       <label class="searchbar" aria-label="Поиск по приложениям">
@@ -806,6 +820,7 @@
         >
       </label>
 
+      <div class="catalog-filters" id="catalogFilters" aria-label="Категории приложений"></div>
       <div class="apps-grid" id="appsGrid"></div>
       <div class="empty" id="emptyState">
         Ничего не найдено. Измени запрос и попробуй ещё раз.
@@ -913,15 +928,16 @@
       <div>
         <strong>OSi Store</strong>
         <p>
-          Каталог приложений для iPhone. Позже можно добавить новые приложения,
-          реальные иконки и отдельные разделы.
+          Каталог приложений для iPhone с оригинальными иконками из IPA.
+          Доступность новых сборок проверяйте после загрузки IPA и PLIST.
         </p>
       </div>
-      <div class="footer-badge">index.html + logo.png</div>
+      <div class="footer-badge">OSi Store · iPhone</div>
     </section>
   </main>
 
   <script>
+    // В репозитории osimsk/ios-install файлы иконок лежат в корне.
     const APPS = [
       {
         name: 'PREMIER',
@@ -962,12 +978,54 @@
         icon: 'https://rskrf.ru/upload/iblock/ce7/dejjzozmreo51j4tbmddlsd0tw9s9ucn.png',
         manifest: 'https://storage.yandexcloud.net/sbol1234/Cloud-Mail.plist'
       }
+,
+      {"name": "Деньги", "versionText": "Версия 1.2", "version": "1.2", "category": "Финансы", "subtitle": "Файл: Alfa_Dengi_Est.ipa", "status": "Не проверено", "device": "iPhone", "initials": "ДЕ", "accent": "#83B5FF", "icon": "alfa-dengi-est.png", "manifest": "https://storage.yandexcloud.net/sbol1234/alfa-dengi-est.plist", "searchTags": "Alfa_Dengi_Est.ipa Деньги com.assistmekz.app"},
+      {"name": "Дзен", "versionText": "Версия 26.6.3", "version": "26.6.3", "category": "Новости", "subtitle": "Файл: Dzen.ipa", "status": "Не проверено", "device": "iPhone", "initials": "ДЗ", "accent": "#B199FF", "icon": "dzen.png", "manifest": "https://storage.yandexcloud.net/sbol1234/dzen.plist", "searchTags": "Dzen.ipa Дзен ru.yandex.mobile.zen"},
+      {"name": "Почта Mail.ru", "versionText": "Версия 15.92.0", "version": "15.92.0", "category": "Почта", "subtitle": "Файл: Mail.ipa", "status": "Не проверено", "device": "iPhone", "initials": "ПО", "accent": "#4C9BFF", "icon": "mail.png", "manifest": "https://storage.yandexcloud.net/sbol1234/mail.plist", "searchTags": "Mail.ipa Почта Mail.ru ru.mail.mail"},
+      {"name": "МТС Банк", "versionText": "Версия 1.62.0", "version": "1.62.0", "category": "Финансы", "subtitle": "Файл: MTS_Bank.ipa", "status": "Не проверено", "device": "iPhone", "initials": "МТ", "accent": "#83B5FF", "icon": "mts-bank.png", "manifest": "https://storage.yandexcloud.net/sbol1234/mts-bank.plist", "searchTags": "MTS_Bank.ipa МТС Банк ru.mts.money"},
+      {"name": "Одноклассники", "versionText": "Версия 11.63.1", "version": "11.63.1", "category": "Соцсети", "subtitle": "Файл: Odnoklassniki.ipa", "status": "Не проверено", "device": "iPhone", "initials": "ОД", "accent": "#B99AFF", "icon": "odnoklassniki.png", "manifest": "https://storage.yandexcloud.net/sbol1234/odnoklassniki.plist", "searchTags": "Odnoklassniki.ipa OK ru.odnoklassniki.iphone"},
+      {"name": "Online · Активы", "versionText": "Версия 16.13.0", "version": "16.13.0", "category": "Финансы", "subtitle": "Альтернативный IPA с таким же Bundle ID. Файл: Sber_Aktivy_Online.ipa", "status": "Не проверено", "device": "iPhone", "initials": "ON", "accent": "#83B5FF", "icon": "sber-aktivy-online.png", "manifest": "https://storage.yandexcloud.net/sbol1234/sber-aktivy-online.plist", "searchTags": "Sber_Aktivy_Online.ipa Online com.assetsonline.ios"},
+      {"name": "Online · Бюджет", "versionText": "Версия 16.0.0", "version": "16.0.0", "category": "Финансы", "subtitle": "Файл: Sber_Budget_Online_1.ipa", "status": "Не проверено", "device": "iPhone", "initials": "ON", "accent": "#83B5FF", "icon": "sber-budget-online-1.png", "manifest": "https://storage.yandexcloud.net/sbol1234/sber-budget-online-1.plist", "searchTags": "Sber_Budget_Online_1.ipa Online com.bdgt.online"},
+      {"name": "Online · Финансы", "versionText": "Версия 17.0.0", "version": "17.0.0", "category": "Финансы", "subtitle": "Файл: Sber_Finansy_Online.ipa", "status": "Не проверено", "device": "iPhone", "initials": "ON", "accent": "#83B5FF", "icon": "sber-finansy-online.png", "manifest": "https://storage.yandexcloud.net/sbol1234/sber-finansy-online.plist", "searchTags": "Sber_Finansy_Online.ipa Online com.digit.budg"},
+      {"name": "Online · Семейный", "versionText": "Версия 17.6.1", "version": "17.6.1", "category": "Финансы", "subtitle": "Файл: Sber_Semeiny_Online.ipa", "status": "Не проверено", "device": "iPhone", "initials": "ON", "accent": "#83B5FF", "icon": "sber-semeiny-online.png", "manifest": "https://storage.yandexcloud.net/sbol1234/sber-semeiny-online.plist", "searchTags": "Sber_Semeiny_Online.ipa Online com.inv.gen"},
+      {"name": "Online · Учёт", "versionText": "Версия 15.3.0", "version": "15.3.0", "category": "Финансы", "subtitle": "Файл: Sber_Uchet_Online.ipa", "status": "Не проверено", "device": "iPhone", "initials": "ON", "accent": "#83B5FF", "icon": "sber-uchet-online.png", "manifest": "https://storage.yandexcloud.net/sbol1234/sber-uchet-online.plist", "searchTags": "Sber_Uchet_Online.ipa Online com.accountingonline.app"},
+      {"name": "Online · Умный", "versionText": "Версия 15.10.0", "version": "15.10.0", "category": "Финансы", "subtitle": "Файл: Sber_Umny_Online.ipa", "status": "Не проверено", "device": "iPhone", "initials": "ON", "accent": "#83B5FF", "icon": "sber-umny-online.png", "manifest": "https://storage.yandexcloud.net/sbol1234/sber-umny-online.plist", "searchTags": "Sber_Umny_Online.ipa Online com.smartonline.myapp"},
+      {"name": "Catch · EasyCatch", "versionText": "Версия 3.0.1", "version": "3.0.1", "category": "Финансы", "subtitle": "Альтернативный IPA с таким же Bundle ID. Файл: TBank_EasyCatch.ipa", "status": "Не проверено", "device": "iPhone", "initials": "CA", "accent": "#83B5FF", "icon": "tbank-easycatch.png", "manifest": "https://storage.yandexcloud.net/sbol1234/tbank-easycatch.plist", "searchTags": "TBank_EasyCatch.ipa Catch com.easycatch.sounder"},
+      {"name": "Инвестиции", "versionText": "Версия 6.3.2", "version": "6.3.2", "category": "Финансы", "subtitle": "Файл: Tinkoff_Investments.ipa", "status": "Не проверено", "device": "iPhone", "initials": "ИН", "accent": "#83B5FF", "icon": "tinkoff-investments.png", "manifest": "https://storage.yandexcloud.net/sbol1234/tinkoff-investments.plist", "searchTags": "Tinkoff_Investments.ipa Инвестиции ru.tcsbank.Investing"},
+      {"name": "Мобайл", "versionText": "Версия 3.36", "version": "3.36", "category": "Связь", "subtitle": "Файл: Tinkoff_Mobile.ipa", "status": "Не проверено", "device": "iPhone", "initials": "МО", "accent": "#87DFFF", "icon": "tinkoff-mobile.png", "manifest": "https://storage.yandexcloud.net/sbol1234/tinkoff-mobile.plist", "searchTags": "Tinkoff_Mobile.ipa Мобайл ru.tcsbank.mvno"},
+      {"name": "VK Музыка", "versionText": "Версия 8.30.1", "version": "8.30.1", "category": "Музыка", "subtitle": "Файл: VK_Music.ipa", "status": "Не проверено", "device": "iPhone", "initials": "VK", "accent": "#97A9FF", "icon": "vk-music.png", "manifest": "https://storage.yandexcloud.net/sbol1234/vk-music.plist", "searchTags": "VK_Music.ipa VK Music com.music.vk"},
+      {"name": "VK Видео", "versionText": "Версия 8.183", "version": "8.183", "category": "Видео", "subtitle": "Файл: VK_Video.ipa", "status": "Не проверено", "device": "iPhone", "initials": "VK", "accent": "#A699FF", "icon": "vk-video.png", "manifest": "https://storage.yandexcloud.net/sbol1234/vk-video.plist", "searchTags": "VK_Video.ipa VK Video com.vk.vkvideo.prod"},
+      {"name": "ВКонтакте", "versionText": "Версия 8.183.1", "version": "8.183.1", "category": "Соцсети", "subtitle": "Файл: VK.ipa", "status": "Не проверено", "device": "iPhone", "initials": "ВК", "accent": "#B99AFF", "icon": "vk.png", "manifest": "https://storage.yandexcloud.net/sbol1234/vk.plist", "searchTags": "VK.ipa VK com.vk.vkclient"},
+      {"name": "Юла", "versionText": "Версия 6.0", "version": "6.0", "category": "Покупки", "subtitle": "Файл: Youla.ipa", "status": "Не проверено", "device": "iPhone", "initials": "ЮЛ", "accent": "#FFBE81", "icon": "youla.png", "manifest": "https://storage.yandexcloud.net/sbol1234/youla.plist", "searchTags": "Youla.ipa Юла com.allgoritm.Youla"},
+      {"name": "Авито", "versionText": "Версия 200.5", "version": "200.5", "category": "Покупки", "subtitle": "Файл: Avito.ipa", "status": "Не проверено", "device": "iPhone", "initials": "АВ", "accent": "#FFBE81", "icon": "avito.png", "manifest": "https://storage.yandexcloud.net/sbol1234/avito.plist", "searchTags": "Avito.ipa Авито ru.avito.app"},
+      {"name": "Online · вариант 16.13", "versionText": "Версия 16.13.0", "version": "16.13.0", "category": "Финансы", "subtitle": "Альтернативный IPA с таким же Bundle ID. Файл: SberbankOnline_16.13.0.ipa", "status": "Не проверено", "device": "iPhone", "initials": "ON", "accent": "#83B5FF", "icon": "sberbankonline-16-13-0.png", "manifest": "https://storage.yandexcloud.net/sbol1234/sberbankonline-16-13-0.plist", "searchTags": "SberbankOnline_16.13.0.ipa Online com.assetsonline.ios"},
+      {"name": "Catch · TCatch", "versionText": "Версия 3.0.1", "version": "3.0.1", "category": "Финансы", "subtitle": "Альтернативный IPA с таким же Bundle ID. Файл: TCatch.ipa", "status": "Не проверено", "device": "iPhone", "initials": "CA", "accent": "#83B5FF", "icon": "tcatch.png", "manifest": "https://storage.yandexcloud.net/sbol1234/tcatch.plist", "searchTags": "TCatch.ipa Catch com.easycatch.sounder"}
     ];
 
     const grid = document.getElementById('appsGrid');
     const input = document.getElementById('searchInput');
     const countLabel = document.getElementById('countLabel');
     const emptyState = document.getElementById('emptyState');
+    const catalogFilters = document.getElementById('catalogFilters');
+    let activeCategory = 'Все';
+
+    ['Все', ...new Set(APPS.map(app => app.category))].forEach(category => {
+      const filter = document.createElement('button');
+      filter.type = 'button';
+      filter.className = 'catalog-filter' + (category === 'Все' ? ' is-active' : '');
+      filter.textContent = category;
+      filter.setAttribute('aria-pressed', category === 'Все' ? 'true' : 'false');
+      filter.addEventListener('click', () => {
+        activeCategory = category;
+        catalogFilters.querySelectorAll('.catalog-filter').forEach(btn => {
+          const selected = btn.textContent === category;
+          btn.classList.toggle('is-active', selected);
+          btn.setAttribute('aria-pressed', String(selected));
+        });
+        render(input.value);
+      });
+      catalogFilters.appendChild(filter);
+    });
 
     function installUrl(manifest){
       return 'itms-services://?action=download-manifest&url=' + encodeURIComponent(manifest);
@@ -1001,10 +1059,11 @@
           app.versionText,
           app.category,
           app.subtitle,
+          app.searchTags || '',
           app.status
         ].join(' ').toLowerCase();
 
-        return !q || hay.includes(q);
+        return (activeCategory === 'Все' || app.category === activeCategory) && (!q || hay.includes(q));
       });
 
       countLabel.textContent = `${items.length} ${pluralizeApps(items.length)}`;
